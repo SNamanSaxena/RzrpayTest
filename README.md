@@ -1,7 +1,7 @@
 # RzrpayTest
 Testing Razorpay Payment Flow
 
-Steps - 
+Steps -   
 1.Double click form.html file
 
 2.Enter Amount
