@@ -28,11 +28,14 @@ import java.util.concurrent.CompletableFuture;
 @SuppressWarnings("rawtypes")
 public class ServiceClass {
 
+    //Setting logger for this class to log associated info & errors
     private final Logger logger = LoggerFactory.getLogger(this.getClass().getName());
+    //Fetching sensitive data from property files
     @Value("${userId}")
     private String key;
     @Value("${secret}")
     private String secret;
+
     @Autowired
     private APICaller apiCaller;
     @Autowired
@@ -69,7 +72,7 @@ public class ServiceClass {
         options.put("currency", "INR");
         options.put("receipt", "txn_" + IdGenerator.getId());
         ResponseEntity<?> res = apiCaller.callAPI(endpoint, options, "POST");
-        if (res.getStatusCode().is2xxSuccessful()) {
+        if (res.getStatusCode().is2xxSuccessful()) { //On Success - async calls to capture Order details
             CompletableFuture.runAsync(() -> orderRepo.save(new ObjectMapper().configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false).convertValue(res.getBody(), Orders.class)));
         }
         return res;
@@ -82,6 +85,7 @@ public class ServiceClass {
 
     public boolean verifySignature(String razorpay_order_id, String razorpay_payment_id, String razorpay_signature) {
         try {
+            //Verifying payment by matching signatures and registering other details on success
             if (Signature.calculateRFC2104HMAC(razorpay_order_id + "|" + razorpay_payment_id, secret).equals(razorpay_signature)) {
                 Orders orderObj = orderRepo.findByOrderId(razorpay_order_id);
                 Payment rzrPaymentObj = fetchPayment(razorpay_payment_id);
