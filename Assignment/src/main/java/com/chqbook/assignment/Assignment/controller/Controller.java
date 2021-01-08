@@ -8,7 +8,10 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @SuppressWarnings({"rawtypes", "unchecked"})
@@ -18,21 +21,13 @@ public class Controller {
     @Autowired
     private ServiceClass service;
 
+    //API to make an order
     @PostMapping("/api/makeOrder")
     public ResponseEntity makeOrder(@RequestBody JSONObject input) {
         return service.makeOrder(input);
     }
 
-    @PostMapping("/api/payment/{id}")
-    public ResponseEntity makePayment(@PathVariable String id) {
-        return service.capturePayment(id);
-    }
-
-    @PostMapping("/api/payment/client/{id}")
-    public ResponseEntity makePaymentViaClient(@PathVariable String id) {
-        return service.capturePaymentViaClient(id);
-    }
-
+    //Callback API to register payment and update order details
     @PostMapping(path = "/exposed/payment/success", consumes = {MediaType.APPLICATION_FORM_URLENCODED_VALUE})
     public ResponseEntity logPayment(String razorpay_payment_id, String razorpay_order_id, String razorpay_signature) {
         JSONObject json = new JSONObject();
