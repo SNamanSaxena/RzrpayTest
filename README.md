@@ -1,5 +1,5 @@
 # RzrpayTest
-Testing Razorpay Payment Flow
+Testing Razorpay Payment Flow (Backend Spring Application deployed on Heroku - https://agile-wave-63776.herokuapp.com/)
 
 Steps -   
 1.Double click form.html file
