@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html>
+
+<body>
+
+    <h2>RazorPay</h2>
+
+    <form id="frm1">
+        Amount: <input type="text" name="amount" value="0.0"><br>
+    </form>
+
+    <br>
+    <button id="order" onclick="makeOrder()">Order</button>
+    <br><br>
+    <button id="rzp-button1">Pay</button>
+    <script id="div1" src="https://checkout.razorpay.com/v1/checkout.js"></script>
+
+    <script>
+        var options = {
+            "key": "rzp_test_A1aNWIcvwnbq0Z", // Enter the Key ID generated from the Dashboard
+            "amount": 100, // Amount is in currency subunits. Default currency is INR. Hence, 50000 refers to 50000 paise
+            "currency": "INR",
+            "name": "Chqbook",
+            "description": "Test Transaction",
+            "image": "https://res.cloudinary.com/chqbook/image/upload/q_auto/v1550643436/logos/final_logo_chqbook.png",
+            "order_id": "", //This is a sample Order ID. Pass the `id` obtained in the response of Step 1
+            "callback_url": "https://agile-wave-63776.herokuapp.com/exposed/payment/success",
+            "prefill": {
+                "name": "Naman Saxena",
+                "email": "naman.saxena@example.com",
+                "contact": "9999999999"
+            },
+            "notes": {
+                "address": "Razorpay Corporate Office"
+            },
+            "theme": {
+                "color": "#3399cc"
+            }
+        };
+
+        var rzp1;
+
+        function makeOrder() {
+            var myHeaders = new Headers();
+            myHeaders.append("Authorization", "Basic YWRtaW46YWRtaW4=");
+            myHeaders.append("Content-Type", "application/json");
+            var amount = document.getElementById("frm1").elements[0].value;
+            var raw = JSON.stringify({ "amount": parseFloat(amount), "notes": { "notes_key_1": "Test" } });
+
+            var requestOptions = {
+                method: 'POST',
+                headers: myHeaders,
+                body: raw,
+                redirect: 'follow'
+            };
+
+            fetch("https://agile-wave-63776.herokuapp.com/api/makeOrder", requestOptions)
+                .then(response => response.text())
+                .then(result => {
+                    console.log(JSON.parse(result));
+                    options["amount"] = parseFloat(amount);
+                    options["order_id"] = JSON.parse(result).id;
+                    rzp1 = new Razorpay(options);
+                    console.log(options);
+                    document.getElementById("order").disabled = true;
+                })
+                .catch(error => console.log('error', error));
+        }
+
+        document.getElementById('rzp-button1').onclick = function (e) {
+            rzp1.open();
+            e.preventDefault();
+        }
+
+    </script>
+</body>
+
+</html>
