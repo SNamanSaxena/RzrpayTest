@@ -23,6 +23,7 @@ public class APICaller {
     @Autowired
     private RestTemplate restTemplate;
 
+    //Module to call APIs and handle exceptions
     public ResponseEntity<?> callAPI(String endpoint, Object body, String requestType) {
         ResponseEntity<?> res;
         try {
