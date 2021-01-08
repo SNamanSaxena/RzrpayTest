@@ -30,4 +30,5 @@ public class Orders {
     private Number amount_paid;
     private Number amount_due;
     private String receipt;
+    private String status;
 }
