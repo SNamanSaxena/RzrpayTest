@@ -1,11 +1,12 @@
 # RzrpayTest
 Testing Razorpay Payment Flow
 
-Double click form.html file
+Steps - 
+1.Double click form.html file
 
-Enter Amount
+2.Enter Amount
 
-And Checkout.
+3.And Checkout.
 
 Card details -  
 VISA - 4111 1111 1111 1111 - Random CVV - Any future expiry date  
